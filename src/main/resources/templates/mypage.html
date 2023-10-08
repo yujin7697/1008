@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- 구글폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            font-family: 'Gothic A1', sans-serif;
+        }
+        body {
+            width: 1024px;
+            height: 860px;
+            margin: 50px auto;
+            overflow: auto;
+            max-height: 860px;
+        }
+
+        header{
+
+        }
+
+        .top-header{
+            display : flex;
+            padding-left : 50px;
+        }
+
+        .top-header > a{
+            align-self : center;
+        }
+
+        .top-header > h2 {
+            margin-left : 30px;
+        }
+
+        header > nav{
+            width : 100%;
+            height : 200px;
+            border : 1px solid black;
+            display: flex;
+            align-items : center;
+        }
+
+        .profile{
+            height : 150px;
+            width : 150px;
+            margin-left : 40px;
+            margin-right : 60px;
+        }
+
+        .profileimg{
+            height : 150px;
+            width : 150px;
+            border : 1px solid gray;
+            border-radius: 50%;
+        }
+        .profileimg img {
+            max-width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        .profile-menu{
+            display:flex;
+            margin-top : 20px;
+        }
+
+        .profileupdate-btn{
+            position : relative;
+            bottom:40px;
+            left : 110px;
+        }
+
+        .follow-box{
+            display : flex;
+            width : 500px;
+            height : 150px;
+            justify-content : space-around;
+        }
+
+        .follow{
+            line-height: 100px;
+        }
+
+        .no{
+            line-height: 0px;
+            text-align: center;
+        }
+
+       .board-container {
+            width: 80%;
+            margin: 0 auto;
+            margin-top : 60px;
+        }
+
+        .board-item {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .idbox{
+            display: flex;
+            justify-content :space-between;
+            align-items : center;
+            margin-bottom : 20px;
+        }
+
+        .menu-btn{
+            all: unset;
+            cursor: pointer;
+        }
+
+        .sub-menu{
+            position : absolute;
+        }
+
+        .sub-menu > a{
+            display: flex;
+            border-bottom : 1px solid gray;
+            border-left : 1px solid gray;
+            border-right : 1px solid gray;
+            width : 110px;
+            justify-content :space-between;
+            align-items : center;
+            position: relative;
+            right : 158px;
+            bottom : 15px;
+            font-style: none;
+            background-color: white;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .update{
+            border-top : 1px solid gray;
+        }
+
+        .delete_btn{
+            pointer : cursor;
+        }
+
+        /* contents 크기 조정 */
+        .contents {
+            font-size: 16px;
+            padding: 20px;
+        }
+
+        /* 이미지 크기 조정 */
+        .thumbnail {
+            width: 200px;
+            height: auto;
+        }
+        .scroll::-webkit-scrollbar{
+            display: none;
+        }
+
+        #board_id{
+            margin-left : 40px;
+        }
+        #board_contents{
+            border: 1px solid black;
+            height:100px;
+        }
+        #board_img{
+            border: 1px solid black;
+            height: 200px;
+        }
+        #board_hits_like{
+            display: flex;
+            justify-content:center;
+        }
+/* 모달 스타일 */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    max-width: 600px;
+    text-align: center;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* 파일 업로드 폼 스타일 */
+#profileUploadForm {
+    margin-top: 20px;
+}
+    </style>
+
+</head>
+<body>
+<header>
+    <div class="top-header">
+
+        <a href="/list"> <img src="/images/logo.png" max-width="100%" height="40" /> </a>
+
+        <h2><span th:text="${dto.nickname}" ></span>'s Page</h2>
+    </div>
+    <nav>
+        <div class="profile">
+            <div class="profileimg" style="display:flex;justify-content:center; align-items : center;">
+
+                <img th:src="${dto.profile}" style="width:100px;height:100px;border-radius:50%;" />
+            </div>
+            <div class="profile-menu">
+                <button class="profileupdate-btn" id="profileBtn">@@@@</button>
+            </div>
+        </div>
+        <div class="follow-box">
+            <div class="follow">팔로워
+                <div class="no">100</div>
+            </div>
+            <div class="follow">팔로잉
+                <div class="no">100</div>
+            </div>
+        </div>
+        <button class="update-btn"><a href="/profile/update">내 정보 수정</a></button>
+    </nav>
+    <!-- 모달 창 -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>프로필 사진 변경</h2>
+            <!-- 업로드 폼 추가 -->
+            <form id="profileUploadForm" action="/uploadProfile" method="post" enctype="multipart/form-data">
+                <!-- 프로필 사진을 업로드하는 파일 입력 필드를 추가 -->
+                <input type="file" name="profileImage" accept="image/*">
+                <input type="submit" value="업로드">
+            </form>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="board-container">
+        <th:block th:each="board : ${myBoards}">
+            <div class="board-item">
+                <div class="idbox">
+                    <div id = board_id th:text="${board.email}">id</div>
+                    <div>
+                        <button class="menu-btn"><img src="/images/menuicon.png" max-width="100%" height="40"/></button>
+                        <!-- 세부 버튼 영역 (초기에는 숨김) -->
+                        <ul class="sub-menu" style="display: none;">
+                            <!-- 세부 버튼들 -->
+                            <a th:href="@{'/update?number=' + ${board.number}}" class="update">수정<img src="/images/pencil.png" max-width="100%" height="40"/></a>
+                            <!-- 게시물 삭제 버튼 추가 -->
+                            <a class="btn btn-warning delete_btn" th:data-no="${board.number}">삭제<img src="/images/scissors.png" max-width="100%" height="40"/></a>
+
+                        </ul>
+                    </div>
+                </div>
+
+                <div id = board_img>
+                    <!-- 이미지 썸네일을 표시하는 이미지 태그 -->
+                    <img th:if="${not #strings.isEmpty(board.filename)}"
+                         th:src="@{file:///C:/upload/user1/0ccb83f9-129e-46de-b4f4-b046a82b833d/${board.dirpath}/${board.filename}}"
+                         alt="Thumbnail" width="200" height="auto" class="thumbnail">
+                </div>
+                <div id=board_contents class="contents" th:text="${board.contents}">contents</div>
+                <div th:text="${board.date}">date</div>
+                <div id="board_hits_like">
+                    <div th:text="${board.hits}">hits</div>
+                    <div th:text="${board.like_count}">like</div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</main>
+
+<!-- axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- common.js   -->
+<script src="/js/common.js"></script>
+
+<script>
+    // 프로필 사진 변경 버튼 클릭 시 모달 열기
+    var profileBtn = document.getElementById("profileBtn");
+    var modal = document.getElementById("profileModal");
+
+    profileBtn.addEventListener("click", function () {
+        modal.style.display = "block";
+    });
+
+    // 모달 닫기 버튼 클릭 시 모달 닫기
+    var closeBtn = document.getElementsByClassName("close")[0];
+
+    closeBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    // 모달 영역 외 클릭 시 모달 닫기
+    window.addEventListener("click", function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+
+</script>
+
+
+<script>
+    // menu-btn을 클릭하면 세부 버튼 영역을 표시/숨김
+    var menuBtns = document.querySelectorAll(".menu-btn");
+
+    menuBtns.forEach(function (menuBtn) {
+        menuBtn.addEventListener("click", function () {
+            var subMenu = this.nextElementSibling; // 다음 요소인 sub-menu 가져오기
+            if (subMenu.style.display === "none" || subMenu.style.display === "") {
+                subMenu.style.display = "block"; // 표시
+            } else {
+                subMenu.style.display = "none"; // 숨김
+            }
+        });
+    });
+
+// 모든 .delete_btn 요소를 선택
+var deleteBtns = document.querySelectorAll('.delete_btn');
+
+// 모든 삭제 버튼에 이벤트 리스너 등록
+deleteBtns.forEach(function (deleteBtn) {
+    deleteBtn.addEventListener('click', function () {
+        const number = deleteBtn.getAttribute('data-no');
+        axios.delete("/delete?number=" + number)
+            .then(function (response) {
+                console.log(response);
+                if (response.status === 200) {
+                    location.href = "/list";
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    });
+});
+</script>
+
+</body>
+</html>
