@@ -259,11 +259,14 @@
         </div>
 
         <div class="searchbox">
-            <select class="search">
-                <option value="nickname">닉네임</option>
-                <option value="content">내용</option>
-            </select>
-            <input> <a href="#"><img src="images/searchicon.png" max-width="100%" height="30"/></a>
+            <form id="searchForm" action="/list/search" method="GET">
+                <select class="search">
+                    <option value="nickname">닉네임</option>
+                    <option value="content">내용</option>
+                </select>
+                <input type="text" name="keyword" class="form-control" id="search"> <a href="#" id="searchButton">
+                <img src="images/searchicon.png" max-width="100%" height="30"/></a>
+            </form>
         </div>
 
         <div class="etcmenu">
@@ -280,14 +283,11 @@
             <a href="/list"> <img src="images/logo.png" max-width="100%" height="40"/> </a>
 
             <div class="quick-searchbox">
-                <form action="/list/search" method="GET">
-                    <select class="quick-search" style="height : 23px;">
-                        <option value="nickname">닉네임</option>
-                        <option value="content">내용</option>
-                    </select>
-                    <input type="text" name="keyword" class="form-control" id="search">
-                    <a href="#"><img src="images/searchicon.png" max-width="100%" height="30" style="position : relative; top : 10px; right : 20px;"/></a>
-                </form>
+                <select class="quick-search" style="height : 23px;">
+                    <option value="nickname">닉네임</option>
+                    <option value="content">내용</option>
+                </select>
+                <input><a href="#"><img src="images/searchicon.png" max-width="100%" height="30" style="position : relative; top : 10px; right : 20px;"/></a>
             </div>
 
             <a href="/mypage" class="tooltip" data-tooltip="내 페이지">
@@ -404,6 +404,17 @@ window.addEventListener('scroll', toggleQuickMenu);
         // 이후 서버로 업데이트된 따봉 수와 게시물 번호를 보내는 로직을 추가해야 합니다.
         // 서버 업데이트 로직은 원하는 방식으로 구현하셔야 합니다.
         }
+</script>
+
+<script>
+    document.getElementById('searchButton').addEventListener('click', function(event) {
+        event.preventDefault(); // 기본 동작을 막습니다.
+
+        // 폼을 가져오고, action 속성을 변경한 다음 폼을 제출합니다.
+        var form = document.getElementById('searchForm');
+        form.action = '/list/search'; // 폼의 action 속성 변경
+        form.submit(); // 폼 제출
+    });
 </script>
 
 </body>
