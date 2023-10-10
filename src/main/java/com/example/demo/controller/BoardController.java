@@ -214,11 +214,11 @@ public class BoardController {
         }
     }
 
-    @GetMapping("/list/search")
+    @GetMapping("/list/search-contents")
     public String search(String keyword, Model model){
         List<Board> searchList = boardService.search_contents(keyword);
         model.addAttribute("boardList",searchList);
-        return "search";
+        return "search-contents";
     }
 
 }
